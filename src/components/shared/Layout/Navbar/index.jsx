@@ -37,31 +37,20 @@ const closedMixin = (theme) => ({
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
-    zIndex: theme.zIndex.drawer + 1,
+    // zIndex: theme.zIndex.drawer + 1,
     ...(open ? openedMixin(theme) : closedMixin(theme)),
 }));
 
 const Navbar = () => {
-    const { open, handleToggleDrawer } = useContext(LayoutContext);
+    const { open } = useContext(LayoutContext);
 
     return (
         <>
             <AppBar position='fixed' open={open} color='inherit' elevation={0}>
                 <Toolbar>
-                    <IconButton
-                        color='inherit'
-                        aria-label='open drawer'
-                        onClick={handleToggleDrawer}
-                        edge='start'
-                        sx={{
-                            marginRight: 1,
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    {/* <Typography variant='h6' noWrap component='div'>
-                        Mini variant drawer
-                    </Typography> */}
+                    <Typography variant='h6' noWrap component='div'>
+                        IOT Portal
+                    </Typography>
                     <Box
                         sx={{
                             ml: 'auto',
