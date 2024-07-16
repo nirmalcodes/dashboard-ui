@@ -2,10 +2,15 @@ import { useContext } from 'react';
 
 import { styled } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
-import { Divider, List } from '@mui/material';
+import { ButtonBase, Divider, List } from '@mui/material';
 
 import { sidebarWidth } from '../../../../constants';
 import { LayoutContext } from '../../../../contexts';
+
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const drawerWidth = sidebarWidth;
 
@@ -47,22 +52,44 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
-export const SidbarHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
+export const SidbarHeader = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+    ...(open && {
+        padding: theme.spacing(1.25, 0, 1, 1.75),
+    }),
+    ...(!open && {
+        display: 'flex',
+        justifyContent: 'center',
+        padding: theme.spacing(1.25, 0),
+    }),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
 }));
 
 const Sidebar = () => {
-    const { open } = useContext(LayoutContext);
+    const { open, handleToggleDrawer } = useContext(LayoutContext);
 
     return (
         <>
             <Drawer variant='permanent' open={open}>
-                <SidbarHeader />
+                <ToggleButton open={open} onClick={handleToggleDrawer}>
+                    {open ? (
+                        <ChevronLeftIcon
+                            sx={{ width: '16px', height: '16px' }}
+                        />
+                    ) : (
+                        <ChevronRightIcon
+                            sx={{ width: '16px', height: '16px' }}
+                        />
+                    )}
+                </ToggleButton>
+                <SidbarHeader open={open}>
+                    <DashboardIcon
+                        color='success'
+                        sx={{ width: '40px', height: '40px' }}
+                    />
+                </SidbarHeader>
                 <List></List>
             </Drawer>
         </>
@@ -70,3 +97,43 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+const openedBtnMixin = (theme) => ({
+    left: drawerWidth,
+    transition: theme.transitions.create('left', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+    }),
+});
+
+const closedBtnMixin = (theme) => ({
+    transition: theme.transitions.create('left', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    left: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+        left: `calc(${theme.spacing(8)} + 1px)`,
+    },
+});
+
+const ToggleButton = styled(ButtonBase, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+    left: drawerWidth,
+    flex: '0 0 auto',
+    ...(open && { ...openedBtnMixin(theme) }),
+    ...(!open && { ...closedBtnMixin(theme) }),
+    position: 'fixed',
+    transform: 'translateX(-50%)',
+    padding: theme.spacing(0.5),
+    top: '24px',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.common.white,
+    border: `1px solid ${theme.palette.divider}`,
+    fontSize: '1.125rem',
+    zIndex: theme.zIndex.appBar + 1,
+    '&:hover': {
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
