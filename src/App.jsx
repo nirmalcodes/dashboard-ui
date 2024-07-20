@@ -1,20 +1,49 @@
+import { Suspense } from 'react';
+
+import { ErrorBoundary } from 'react-error-boundary';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { ColorModeContext, useMode } from './themes';
-import { Box, CssBaseline, ThemeProvider } from '@mui/material';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import ErrorFallback from './components/shared/ErrorFallback';
 import Layout from './components/shared/Layout';
+
+import Home from './pages/Home';
 
 const App = () => {
     const [theme, colorMode] = useMode();
 
     return (
         <>
-            <ColorModeContext.Provider value={colorMode}>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <Layout>
-                        <Box sx={{ flexGrow: 1, p: 2 }}>App</Box>
-                    </Layout>
-                </ThemeProvider>
-            </ColorModeContext.Provider>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <ColorModeContext.Provider value={colorMode}>
+                        <ThemeProvider theme={theme}>
+                            <CssBaseline />
+                            <BrowserRouter>
+                                <Routes>
+                                    <Route
+                                        path='/'
+                                        element={
+                                            <Layout>
+                                                <Home />
+                                            </Layout>
+                                        }
+                                    />
+                                    <Route
+                                        path='/dashboard'
+                                        element={
+                                            <Layout>
+                                                <Home />
+                                            </Layout>
+                                        }
+                                    />
+                                </Routes>
+                            </BrowserRouter>
+                        </ThemeProvider>
+                    </ColorModeContext.Provider>
+                </Suspense>
+            </ErrorBoundary>
         </>
     );
 };
