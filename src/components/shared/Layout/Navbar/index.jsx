@@ -1,16 +1,12 @@
 import { useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
-import { Box, IconButton, Toolbar, Typography } from '@mui/material';
+import { Box, Toolbar, Typography } from '@mui/material';
 
-import MenuIcon from '@mui/icons-material/Menu';
-
-import { sidebarWidth } from '../../../../constants';
+import { drawerWidth, drawerMin } from '../../../../constants';
 import { LayoutContext } from '../../../../contexts';
 
 import ThemeToggler from '../../ThemeToggler';
-
-const drawerWidth = sidebarWidth;
 
 const openedMixin = (theme) => ({
     marginLeft: drawerWidth,
@@ -22,15 +18,15 @@ const openedMixin = (theme) => ({
 });
 
 const closedMixin = (theme) => ({
-    marginLeft: `calc(${theme.spacing(7)} + 1px)`,
-    width: `calc(100% - ${theme.spacing(7)} - 1px)`,
+    marginLeft: `calc(${theme.spacing(drawerMin)} + 1px)`,
+    width: `calc(100% - ${theme.spacing(drawerMin)} - 1px)`,
     transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
     [theme.breakpoints.up('sm')]: {
-        marginLeft: `calc(${theme.spacing(8)} + 1px)`,
-        width: `calc(100% - ${theme.spacing(8)} - 1px)`,
+        marginLeft: `calc(${theme.spacing(drawerMin + 2)} + 1px)`,
+        width: `calc(100% - ${theme.spacing(drawerMin + 2)} - 1px)`,
     },
 });
 
