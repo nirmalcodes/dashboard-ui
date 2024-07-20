@@ -1,1 +1,3 @@
-export const sidebarWidth = 240;
+export const drawerWidth = 240;
+
+export const drawerMin = 8;
